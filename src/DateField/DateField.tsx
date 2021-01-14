@@ -39,7 +39,12 @@ const DateField: React.FC<IDateFieldProps> = ({
         calendarPosition={calendarPosition}
         defaultDate={defaultDate}
         input={input}
-        inputProps={inputProps}
+        inputProps={{
+          ...inputProps,
+          "data-mindate": format(minDate, "dd.MM.yyyy"),
+          "data-maxdate": format(maxDate, "dd.MM.yyyy"),
+          "data-defaultdate": format(defaultDate, "dd.MM.yyyy"),
+        }}
         maxDate={maxDate}
         maxDateMessage={maxDateMessage}
         meta={meta}

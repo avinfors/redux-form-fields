@@ -1,5 +1,8 @@
 import { Meta, Story, Canvas, ArgsTable } from "@storybook/addon-docs/blocks";
 import { Field } from "redux-form";
+import addDays from "date-fns/addDays";
+import startOfDay from "date-fns/startOfDay";
+
 import DateField from "./DateField";
 
 <Meta title="DateField" />
@@ -11,6 +14,17 @@ Using `DateField` creates an input with date picker.
 <Canvas>
   <Story name="Default">
     <Field component={DateField} name="dateField.default" />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="With min and max dates">
+    <Field
+      component={DateField}
+      maxDate={addDays(startOfDay(new Date()), 5)}
+      minDate={addDays(startOfDay(new Date()), -5)}
+      name="dateField.withMinAndMaxDates"
+    />
   </Story>
 </Canvas>
 

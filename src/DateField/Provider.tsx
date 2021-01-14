@@ -45,6 +45,8 @@ export const DateFieldProvider: React.FC<
     maxDateMessage,
   } = props;
 
+  const ref = React.useRef(false);
+
   const [viewState, setViewState] = React.useState<ViewType>("days");
   const [dateState, setDateState] = React.useState(() =>
     getInitialDate(input.value)
@@ -71,6 +73,13 @@ export const DateFieldProvider: React.FC<
       setShowState(false);
     }
   };
+
+  React.useEffect(() => {
+    if (!ref.current) {
+      selectDay(input.value);
+      ref.current = true;
+    }
+  }, [ref, selectDay, input.value]);
 
   React.useEffect(() => {
     if (isValid(input.value)) {

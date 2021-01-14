@@ -3,6 +3,8 @@ import { Provider } from "react-redux";
 import { reduxForm, reducer as form } from "redux-form";
 import { Row, Col, FormGroup } from "reactstrap";
 import { composeWithDevTools } from "redux-devtools-extension";
+import addDays from "date-fns/addDays";
+import startOfDay from "date-fns/startOfDay";
 
 import "./styles.scss";
 
@@ -22,8 +24,20 @@ const withReduxForm = (Story) => {
         readOnly: "Read-only content",
       },
       dateField: {
-        default: new Date(),
+        withMinAndMaxDates: addDays(startOfDay(new Date()), -8),
       },
+    },
+    validate: (values) => {
+      const errors = {};
+      if (Object.keys(values).length === 0) {
+        return {};
+      }
+      const { withMinAndMaxDates } = values.dateField;
+      if (typeof withMinAndMaxDates === "string") {
+        errors.dateField = {};
+        errors.dateField.withMinAndMaxDates = withMinAndMaxDates;
+      }
+      return errors;
     },
   })(Story);
   return (
