@@ -21,6 +21,9 @@ const withReduxForm = (Story) => {
       textField: {
         readOnly: "Read-only content",
       },
+      dateField: {
+        default: new Date(),
+      },
     },
   })(Story);
   return (
