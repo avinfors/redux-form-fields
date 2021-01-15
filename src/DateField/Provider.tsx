@@ -60,7 +60,7 @@ export const DateFieldProvider: React.FC<
 
   const selectDay = React.useCallback(
     (day) => {
-      if (isValid(day)) {
+      if (typeof day !== "string" && isValid(day)) {
         if (isBefore(day, minDate)) {
           input.onChange(minDateMessage(minDate));
         } else if (isAfter(day, maxDate)) {
@@ -86,13 +86,15 @@ export const DateFieldProvider: React.FC<
   }, [selectDay, input.value]);
 
   React.useEffect(() => {
-    if (isValid(input.value)) {
-      setDateState(input.value);
-      setMonthState(input.value);
-      setTypedState(format(input.value));
+    const value = input.value;
+
+    if (typeof value !== "string" && isValid(value)) {
+      setDateState(value);
+      setMonthState(value);
+      setTypedState(format(value));
     } else {
-      setDateState(getInitialDate(input.value));
-      setMonthState(getInitialMonth(input.value, defaultDate));
+      setDateState(getInitialDate(value));
+      setMonthState(getInitialMonth(value, defaultDate));
     }
   }, [input.value, defaultDate]);
 

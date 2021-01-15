@@ -31,13 +31,12 @@ export const format = (date: Date | number, to = "dd.MM.yyyy"): string =>
   formatDate(date, to, { locale: ru });
 
 export const getInitialMonth = (
-  selectedDate: Date | number,
+  value: Date | number,
   defaultDate: Date | number
-): Date =>
-  isDate(selectedDate) ? startOfDay(selectedDate) : startOfDay(defaultDate);
+): Date => (isDate(value) ? startOfDay(value) : startOfDay(defaultDate));
 
-export const getInitialDate = (selectedDate: Date | number): Date | undefined =>
-  isDate(selectedDate) ? startOfDay(selectedDate) : undefined;
+export const getInitialDate = (value: Date | number): Date | undefined =>
+  isDate(value) ? startOfDay(value) : undefined;
 
 export const getDefaultDate = (): Date => startOfDay(new Date());
 
