@@ -27,24 +27,24 @@ import subMonths from "date-fns/subMonths";
 import subYears from "date-fns/subYears";
 import { ru } from "date-fns/locale";
 
-export const format = (date: Date | number, to: string = "dd.MM.yyyy") =>
+export const format = (date: Date | number, to = "dd.MM.yyyy"): string =>
   formatDate(date, to, { locale: ru });
 
 export const getInitialMonth = (
   selectedDate: Date | number,
   defaultDate: Date | number
-) =>
+): Date =>
   isDate(selectedDate) ? startOfDay(selectedDate) : startOfDay(defaultDate);
 
-export const getInitialDate = (selectedDate: Date | number) =>
+export const getInitialDate = (selectedDate: Date | number): Date | undefined =>
   isDate(selectedDate) ? startOfDay(selectedDate) : undefined;
 
-export const getDefaultDate = () => startOfDay(new Date());
+export const getDefaultDate = (): Date => startOfDay(new Date());
 
-export const getMinDate = (years: number) =>
+export const getMinDate = (years: number): Date =>
   startOfDay(subYears(startOfDay(new Date()), years));
 
-export const getMaxDate = (years: number) =>
+export const getMaxDate = (years: number): Date =>
   startOfDay(addYears(startOfDay(new Date()), years));
 
 export {

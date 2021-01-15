@@ -14,7 +14,7 @@ import {
   isAfter,
 } from "../utils";
 
-const Header = () => {
+const Header: React.FC = () => {
   const { month, setMonth, setView, minDate, maxDate } = useDateField();
   const mounthName = format(month, "LLLL");
   const year = getYear(month);

@@ -16,7 +16,8 @@ import Calendar from "./Calendar";
 import { parse, isValid } from "../utils";
 import { getMetaError } from "../../utils";
 
-const InputBase = () => {
+const InputBase: React.FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const trigger = React.useRef<HTMLButtonElement>(null!);
 
   const pipe = React.useMemo(

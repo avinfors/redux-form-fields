@@ -21,7 +21,7 @@ import {
   format,
 } from "../utils";
 
-const Months = () => {
+const Months: React.FC = () => {
   const { month, minDate, maxDate, setMonth, setView } = useDateField();
 
   const prevClickHandler = () => setMonth(subYears(month, 1));

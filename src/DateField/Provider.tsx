@@ -10,7 +10,6 @@ import {
   isAfter,
 } from "./utils";
 
-type SelectDayType = (day: any) => void;
 type ViewType = "days" | "months" | "years";
 
 interface IDateFieldCtxProps extends IDateFieldProps {
@@ -24,13 +23,15 @@ interface IDateFieldCtxProps extends IDateFieldProps {
   setMonth: (month: Date) => void;
   setShow: (show: boolean) => void;
   setTyped: (typed: string) => void;
-  selectDay: SelectDayType;
+  selectDay: (day: any) => void;
 }
 
 const DateFieldCtx = React.createContext<IDateFieldCtxProps>(null);
 
-export const useDateField = () => React.useContext(DateFieldCtx);
+export const useDateField = (): IDateFieldCtxProps =>
+  React.useContext(DateFieldCtx);
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface IDateFieldProviderProps extends IDateFieldProps {}
 
 export const DateFieldProvider: React.FC<
@@ -57,29 +58,32 @@ export const DateFieldProvider: React.FC<
   const [showState, setShowState] = React.useState(false);
   const [typedState, setTypedState] = React.useState("");
 
-  const selectDay: SelectDayType = (day) => {
-    if (isValid(day)) {
-      if (isBefore(day, minDate)) {
-        input.onChange(minDateMessage(minDate));
-      } else if (isAfter(day, maxDate)) {
-        input.onChange(maxDateMessage(maxDate));
+  const selectDay = React.useCallback(
+    (day) => {
+      if (isValid(day)) {
+        if (isBefore(day, minDate)) {
+          input.onChange(minDateMessage(minDate));
+        } else if (isAfter(day, maxDate)) {
+          input.onChange(maxDateMessage(maxDate));
+        } else {
+          input.onChange(day);
+        }
       } else {
-        input.onChange(day);
+        input.onChange("");
       }
-    } else {
-      input.onChange("");
-    }
-    if (showState) {
-      setShowState(false);
-    }
-  };
+      if (showState) {
+        setShowState(false);
+      }
+    },
+    [input, minDate, minDateMessage, maxDate, maxDateMessage, showState]
+  );
 
   React.useEffect(() => {
     if (!ref.current) {
       selectDay(input.value);
       ref.current = true;
     }
-  }, [ref, selectDay, input.value]);
+  }, [selectDay, input.value]);
 
   React.useEffect(() => {
     if (isValid(input.value)) {
@@ -90,20 +94,13 @@ export const DateFieldProvider: React.FC<
       setDateState(getInitialDate(input.value));
       setMonthState(getInitialMonth(input.value, defaultDate));
     }
-  }, [
-    input.value,
-    format,
-    isValid,
-    getInitialMonth,
-    getInitialDate,
-    defaultDate,
-  ]);
+  }, [input.value, defaultDate]);
 
   React.useEffect(() => {
     if (showState && !dateState) {
       setMonthState(getInitialMonth(input.value, defaultDate));
     }
-  }, [showState, dateState, input.value, defaultDate, getInitialMonth]);
+  }, [showState, dateState, input.value, defaultDate]);
 
   return (
     <DateFieldCtx.Provider
