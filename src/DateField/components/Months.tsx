@@ -9,7 +9,6 @@ import {
   getYear,
   startOfMonth,
   setMonths,
-  getMonth,
   getMonths,
   startOfYear,
   endOfYear,
@@ -40,12 +39,11 @@ const Months: React.FC = () => {
     setView("days");
   };
 
-  const isMonthDisabled = (day: Date) => {
-    const currentMonth = getMonth(day);
-    const minDateMonth = getMonth(minDate);
-    const maxDateMonth = getMonth(maxDate);
+  const isMonthDisabled = (month: Date) => {
+    const minDateMonth = startOfMonth(minDate);
+    const maxDateMonth = startOfMonth(maxDate);
 
-    return currentMonth < minDateMonth || currentMonth > maxDateMonth;
+    return month < minDateMonth || month > maxDateMonth;
   };
 
   const isMonthSelected = (day: Date) => isEqual(day, startOfMonth(month));
