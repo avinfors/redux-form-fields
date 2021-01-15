@@ -4,7 +4,6 @@ import classNames from "classnames";
 
 import { useDateField } from "../Provider";
 import { getYear, setYear } from "../utils";
-import styles from "./styles.module.scss";
 
 const Years: React.FC = () => {
   const { month, minDate, maxDate, setMonth, setView } = useDateField();
@@ -110,10 +109,9 @@ const Years: React.FC = () => {
                   key={year}
                   className={classNames(
                     "w-100 border-0 outline-0 rounded",
-                    disabled && styles.disabled,
                     selected && !disabled && "text-white font-weight-normal"
                   )}
-                  color={disabled ? "disabled" : selected ? "primary" : "link"}
+                  color={selected ? "primary" : "link"}
                   disabled={disabled}
                   onClick={yearClickHandler(year, disabled)}
                   outline={!selected}

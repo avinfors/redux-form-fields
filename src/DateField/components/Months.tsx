@@ -3,7 +3,6 @@ import { ButtonGroup, Button } from "reactstrap";
 import classNames from "classnames";
 
 import { useDateField } from "../Provider";
-import styles from "./styles.module.scss";
 import {
   subYears,
   addYears,
@@ -135,10 +134,9 @@ const Months: React.FC = () => {
                   key={day.getTime()}
                   className={classNames(
                     "w-100 border-0 outline-0 rounded",
-                    disabled && styles.disabled,
                     selected && !disabled && "text-white font-weight-normal"
                   )}
-                  color={disabled ? "disabled" : selected ? "primary" : "link"}
+                  color={selected ? "primary" : "link"}
                   disabled={disabled}
                   onClick={monthClickHandler(day, disabled)}
                   outline={!selected}
