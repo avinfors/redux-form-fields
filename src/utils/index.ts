@@ -5,6 +5,6 @@ export const getMetaError = ({
   dirty,
   error,
   submitFailed,
-}: WrappedFieldMetaProps) => {
+}: WrappedFieldMetaProps): any => {
   return ((touched || dirty) && error) || (submitFailed && error);
 };

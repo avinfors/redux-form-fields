@@ -3,6 +3,7 @@ import { Tooltip, TooltipProps as IReactstrapTooltipProps } from "reactstrap";
 
 import styles from "./styles.module.scss";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IErrorTooltipProps
   extends React.PropsWithChildren<
     React.HTMLAttributes<HTMLDivElement> & {
@@ -20,6 +21,7 @@ const ErrorTooltip: React.FC<IErrorTooltipProps> = ({
 }) => {
   const [hoverState, setHoverState] = React.useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ref = React.useRef<HTMLDivElement>(null!);
 
   const mouseEnterHandler = () => setHoverState(true);

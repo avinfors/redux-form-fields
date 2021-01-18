@@ -28,6 +28,7 @@ const CheckboxField: React.FC<ICheckboxFieldProps> = ({
   readOnly,
   ...rest
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const ref = React.useRef<HTMLInputElement>(null!);
 
   const changeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
