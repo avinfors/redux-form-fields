@@ -28,25 +28,34 @@ const Months: React.FC = () => {
 
   const yearClickHandler = () => setView("years");
 
-  const monthClickHandler = (day: Date, disabled: boolean) => () => {
+  const monthClickHandler = (date: Date, disabled: boolean) => () => {
     if (disabled) {
       return;
     }
 
-    const months = getMonths(day);
+    const months = getMonths(date);
 
-    setMonth(setMonths(day, months));
+    setMonth(setMonths(date, months));
     setView("days");
   };
 
-  const isMonthDisabled = (month: Date) => {
+  const isMonthDisabled = (date: Date) => {
     const minDateMonth = startOfMonth(minDate);
     const maxDateMonth = startOfMonth(maxDate);
 
-    return month < minDateMonth || month > maxDateMonth;
+    return date < minDateMonth || date > maxDateMonth;
   };
 
-  const isMonthSelected = (day: Date) => isEqual(day, startOfMonth(month));
+  const isMonthSelected = (date: Date) => {
+    const minDateMonth = startOfMonth(minDate);
+    const maxDateMonth = startOfMonth(maxDate);
+
+    return (
+      isEqual(date, startOfMonth(month)) &&
+      date >= minDateMonth &&
+      date <= maxDateMonth
+    );
+  };
 
   const isPrevDisabled = () => {
     const prevYear = subYears(month, 1);
