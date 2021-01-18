@@ -1,6 +1,7 @@
 import * as React from "react";
 import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
 import Select, { Props as IReactSelectProps } from "react-select";
+import classNames from "classnames";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
@@ -81,11 +82,17 @@ const SelectField: React.FC<ISelectFieldProps> = ({
       : metaError;
 
   return (
-    <ErrorTooltip data-name={input.name} error={error}>
+    <ErrorTooltip
+      className={menuOpenState ? "SelectFieldOpened" : "SelectFieldClosed"}
+      data-name={input.name}
+      error={error}
+    >
       <Select
         {...input}
         {...rest}
         blurInputOnSelect={!!metaError || !!staticErrorState}
+        className={classNames("SelectField", error && "SelectFieldError")}
+        classNamePrefix="SelectFieldInner"
         formatOptionLabel={formatOptionLabel}
         getOptionLabel={(option) => option[optionLabel]}
         getOptionValue={(option) => option[optionValue]}
