@@ -1,33 +1,32 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
-import Select, { Props as IReactSelectProps } from "react-select";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
+import Select, { Props as ReactSelectProps } from "react-select";
 import classNames from "classnames";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface ISelectFieldProps
-  extends IReduxFormFieldProps,
-    IReactSelectProps {
-  disabled?: boolean;
-  id?: React.InputHTMLAttributes<HTMLInputElement>["id"];
-  isClearable?: IReactSelectProps["isClearable"];
-  isMulti?: IReactSelectProps["isMulti"];
-  isOptionDisabled?: IReactSelectProps["isOptionDisabled"];
-  isSearchable?: IReactSelectProps["isSearchable"];
-  maxItems?: number;
-  maxItemsError?: (maxItems?: number) => string;
-  menuPlacement?: IReactSelectProps["menuPlacement"];
-  noOptionsMessage?: IReactSelectProps["noOptionsMessage"];
-  optionLabel?: string;
-  options?: IReactSelectProps["options"];
-  optionValue?: string;
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
-  processValuesBeforeSelect?: (values: any) => any;
-  readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
-}
+export type SelectFieldProps = ReduxFormFieldProps &
+  ReactSelectProps & {
+    disabled?: boolean;
+    id?: React.InputHTMLAttributes<HTMLInputElement>["id"];
+    isClearable?: ReactSelectProps["isClearable"];
+    isMulti?: ReactSelectProps["isMulti"];
+    isOptionDisabled?: ReactSelectProps["isOptionDisabled"];
+    isSearchable?: ReactSelectProps["isSearchable"];
+    maxItems?: number;
+    maxItemsError?: (maxItems?: number) => string;
+    menuPlacement?: ReactSelectProps["menuPlacement"];
+    noOptionsMessage?: ReactSelectProps["noOptionsMessage"];
+    optionLabel?: string;
+    options?: ReactSelectProps["options"];
+    optionValue?: string;
+    placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+    processValuesBeforeSelect?: (values: any) => any;
+    readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
+  };
 
-const SelectField: React.FC<ISelectFieldProps> = ({
+const SelectField: React.FC<SelectFieldProps> = ({
   input,
   meta,
   disabled,
@@ -54,7 +53,7 @@ const SelectField: React.FC<ISelectFieldProps> = ({
 
   const blurHandler = () => input.onBlur(input.value);
 
-  const changeHandler: IReactSelectProps["onChange"] = (value) => {
+  const changeHandler: ReactSelectProps["onChange"] = (value) => {
     const valueProcessed = processValuesBeforeSelect(value);
 
     if (maxItems && isMulti && valueProcessed) {

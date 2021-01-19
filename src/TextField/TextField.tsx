@@ -1,39 +1,38 @@
 import * as React from "react";
 import {
-  WrappedFieldProps as IReduxFormFieldProps,
-  WrappedFieldInputProps as IReduxFormFieldInputProps,
+  WrappedFieldProps as ReduxFormFieldProps,
+  WrappedFieldInputProps as ReduxFormFieldInputProps,
 } from "redux-form";
 import {
   InputGroup,
   Input,
-  InputProps as IReactstrapInputProps,
+  InputProps as ReactstrapInputProps,
   InputGroupAddon,
 } from "reactstrap";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface ITextFieldProps
-  extends IReduxFormFieldProps,
-    IReactstrapInputProps {
-  action?: {
-    addon: React.ReactNode;
-    callback?: (value: IReduxFormFieldInputProps["value"]) => void;
+export type TextFieldProps = ReduxFormFieldProps &
+  ReactstrapInputProps & {
+    action?: {
+      addon: React.ReactNode;
+      callback?: (value: ReduxFormFieldInputProps["value"]) => void;
+    };
+    disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
+    noPast?: boolean;
+    placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+    readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
+    sanitazeOnBlur?: boolean;
+    trimOnBlur?: boolean;
+    type?: "text" | "email";
+    validateLanguage?: {
+      regex: RegExp;
+      error: string;
+    };
   };
-  disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
-  noPast?: boolean;
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
-  readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
-  sanitazeOnBlur?: boolean;
-  trimOnBlur?: boolean;
-  type?: "text" | "email";
-  validateLanguage?: {
-    regex: RegExp;
-    error: string;
-  };
-}
 
-const TextField: React.FC<ITextFieldProps> = ({
+const TextField: React.FC<TextFieldProps> = ({
   input,
   meta,
   action,

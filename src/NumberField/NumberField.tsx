@@ -1,34 +1,33 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
 import {
   Input,
-  InputProps as IReactstrapInputProps,
+  InputProps as ReactstrapInputProps,
   InputGroup,
 } from "reactstrap";
 import NumberFormat, {
-  NumberFormatProps as IReactNumberFormatProps,
+  NumberFormatProps as ReactNumberFormatProps,
 } from "react-number-format";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface INumberFieldProps
-  extends IReduxFormFieldProps,
-    Omit<IReactstrapInputProps, "type">,
-    IReactNumberFormatProps {
-  allowNegative?: IReactNumberFormatProps["allowNegative"];
-  decimalScale?: IReactNumberFormatProps["decimalScale"];
-  decimalSeparator?: IReactNumberFormatProps["decimalSeparator"];
-  disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
-  inputMode?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"];
-  fixedDecimalScale?: IReactNumberFormatProps["fixedDecimalScale"];
-  maxLength: React.InputHTMLAttributes<HTMLInputElement>["maxLength"];
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
-  thousandSeparator?: IReactNumberFormatProps["thousandSeparator"];
-  type?: "text" | "tel";
-}
+export type NumberFieldProps = ReduxFormFieldProps &
+  Omit<ReactstrapInputProps, "type"> &
+  ReactNumberFormatProps & {
+    allowNegative?: ReactNumberFormatProps["allowNegative"];
+    decimalScale?: ReactNumberFormatProps["decimalScale"];
+    decimalSeparator?: ReactNumberFormatProps["decimalSeparator"];
+    disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
+    inputMode?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"];
+    fixedDecimalScale?: ReactNumberFormatProps["fixedDecimalScale"];
+    maxLength: React.InputHTMLAttributes<HTMLInputElement>["maxLength"];
+    placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+    thousandSeparator?: ReactNumberFormatProps["thousandSeparator"];
+    type?: "text" | "tel";
+  };
 
-const NumberField: React.FC<INumberFieldProps> = ({
+const NumberField: React.FC<NumberFieldProps> = ({
   input,
   meta,
   allowNegative,

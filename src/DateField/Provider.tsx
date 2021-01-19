@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IDateFieldProps } from "./DateField";
+import { DateFieldProps } from "./DateField";
 import {
   getInitialMonth,
   getInitialDate,
@@ -12,7 +12,7 @@ import {
 
 type ViewType = "days" | "months" | "years";
 
-interface IDateFieldCtxProps extends IDateFieldProps {
+type DateFieldCtxProps = DateFieldProps & {
   view: ViewType;
   date: Date;
   month: Date;
@@ -24,18 +24,17 @@ interface IDateFieldCtxProps extends IDateFieldProps {
   setShow: (show: boolean) => void;
   setTyped: (typed: string) => void;
   selectDay: (day: any) => void;
-}
+};
 
-const DateFieldCtx = React.createContext<IDateFieldCtxProps>(null);
+const DateFieldCtx = React.createContext<DateFieldCtxProps>(null);
 
-export const useDateField = (): IDateFieldCtxProps =>
+export const useDateField = (): DateFieldCtxProps =>
   React.useContext(DateFieldCtx);
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface IDateFieldProviderProps extends IDateFieldProps {}
+type DateFieldProviderProps = DateFieldProps;
 
 export const DateFieldProvider: React.FC<
-  React.PropsWithChildren<IDateFieldProviderProps>
+  React.PropsWithChildren<DateFieldProviderProps>
 > = ({ children, ...props }) => {
   const {
     input,

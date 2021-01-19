@@ -1,25 +1,24 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
 import {
   CustomInput,
-  CustomInputProps as IReactstrapCustomInputProps,
+  CustomInputProps as ReactstrapCustomInputProps,
 } from "reactstrap";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface ICheckboxFieldProps
-  extends IReduxFormFieldProps,
-    Omit<IReactstrapCustomInputProps, "id"> {
-  disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
-  id?:
-    | IReactstrapCustomInputProps["id"]
-    | React.InputHTMLAttributes<HTMLInputElement>["id"];
-  label?: IReactstrapCustomInputProps["label"];
-  readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
-}
+export type CheckboxFieldProps = ReduxFormFieldProps &
+  Omit<ReactstrapCustomInputProps, "id"> & {
+    disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
+    id?:
+      | ReactstrapCustomInputProps["id"]
+      | React.InputHTMLAttributes<HTMLInputElement>["id"];
+    label?: ReactstrapCustomInputProps["label"];
+    readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
+  };
 
-const CheckboxField: React.FC<ICheckboxFieldProps> = ({
+const CheckboxField: React.FC<CheckboxFieldProps> = ({
   input,
   meta,
   disabled,

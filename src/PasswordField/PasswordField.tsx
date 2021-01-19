@@ -1,8 +1,8 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
 import {
   Input,
-  InputProps as IReactstrapInputProps,
+  InputProps as ReactstrapInputProps,
   InputGroup,
   InputGroupAddon,
   Button,
@@ -13,14 +13,13 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface IPasswordFieldProps
-  extends IReduxFormFieldProps,
-    IReactstrapInputProps {
-  disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
-}
+export type PasswordFieldProps = ReduxFormFieldProps &
+  ReactstrapInputProps & {
+    disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
+    placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+  };
 
-const PasswordField: React.FC<IPasswordFieldProps> = ({
+const PasswordField: React.FC<PasswordFieldProps> = ({
   input,
   meta,
   disabled,

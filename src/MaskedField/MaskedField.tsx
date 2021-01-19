@@ -1,30 +1,29 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
 import {
   Input,
-  InputProps as IReactstrapInputProps,
+  InputProps as ReactstrapInputProps,
   InputGroup,
 } from "reactstrap";
 import MaskedInput, {
-  MaskedInputProps as IReactTextMaskInputProps,
+  MaskedInputProps as ReactTextMaskInputProps,
 } from "react-text-mask";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface IMaskedFieldProps
-  extends IReduxFormFieldProps,
-    Omit<IReactstrapInputProps, "type">,
-    IReactTextMaskInputProps {
-  disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
-  inputMode?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"];
-  mask?: IReactTextMaskInputProps["mask"];
-  pipe?: IReactTextMaskInputProps["pipe"];
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
-  placeholderChar?: IReactTextMaskInputProps["placeholderChar"];
-}
+export type MaskedFieldProps = ReduxFormFieldProps &
+  Omit<ReactstrapInputProps, "type"> &
+  ReactTextMaskInputProps & {
+    disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
+    inputMode?: React.InputHTMLAttributes<HTMLInputElement>["inputMode"];
+    mask?: ReactTextMaskInputProps["mask"];
+    pipe?: ReactTextMaskInputProps["pipe"];
+    placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+    placeholderChar?: ReactTextMaskInputProps["placeholderChar"];
+  };
 
-const MaskedField: React.FC<IMaskedFieldProps> = ({
+const MaskedField: React.FC<MaskedFieldProps> = ({
   input,
   meta,
   disabled,
