@@ -1,6 +1,6 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
-import { InputProps as IReactstrapInputProps, PopoverProps } from "reactstrap";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
+import { InputProps as ReactstrapInputProps, PopoverProps } from "reactstrap";
 
 import { DateFieldProvider } from "./Provider";
 import Input from "./components/Input";
@@ -8,17 +8,17 @@ import { getDefaultDate, getMinDate, getMaxDate, format } from "./utils";
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface IDateFieldProps extends IReduxFormFieldProps {
+export type DateFieldProps = ReduxFormFieldProps & {
   calendarPosition?: PopoverProps["placement"];
   defaultDate?: Date | number;
-  inputProps?: IReactstrapInputProps;
+  inputProps?: ReactstrapInputProps;
   maxDate?: Date | number;
   maxDateMessage?: (maxDate: Date | number) => string;
   minDate?: Date | number;
   minDateMessage?: (minDate: Date | number) => string;
-}
+};
 
-const DateField: React.FC<IDateFieldProps> = ({
+const DateField: React.FC<DateFieldProps> = ({
   input,
   meta,
   calendarPosition = "bottom",

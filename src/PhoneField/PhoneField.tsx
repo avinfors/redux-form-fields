@@ -2,26 +2,25 @@ import * as React from "react";
 import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
 import {
   Input,
-  InputProps as IReactstrapInputProps,
+  InputProps as ReactstrapInputProps,
   InputGroup,
 } from "reactstrap";
 import MaskedInput, {
-  MaskedInputProps as IReactTextMaskInputProps,
+  MaskedInputProps as ReactTextMaskInputProps,
 } from "react-text-mask";
 
 import ErrorTooltip from "../ErrorTooltip";
 import { getMetaError } from "../utils";
 
-export interface IPhoneFieldProps
-  extends IReduxFormFieldProps,
-    Omit<IReactstrapInputProps, "type">,
-    IReactTextMaskInputProps {
-  disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
-  placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
-  placeholderChar?: IReactTextMaskInputProps["placeholderChar"];
-}
+export type PhoneFieldProps = IReduxFormFieldProps &
+  Omit<ReactstrapInputProps, "type"> &
+  ReactTextMaskInputProps & {
+    disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
+    placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+    placeholderChar?: ReactTextMaskInputProps["placeholderChar"];
+  };
 
-const PhoneField: React.FC<IPhoneFieldProps> = ({
+const PhoneField: React.FC<PhoneFieldProps> = ({
   input,
   meta,
   disabled,

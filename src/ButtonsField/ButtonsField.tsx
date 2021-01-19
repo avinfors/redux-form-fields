@@ -1,5 +1,5 @@
 import * as React from "react";
-import { WrappedFieldProps as IReduxFormFieldProps } from "redux-form";
+import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
 import { Button, ButtonGroup } from "reactstrap";
 import classNames from "classnames";
 
@@ -10,7 +10,7 @@ export type ButtonsFieldOption = {
   [key: string]: string | number | boolean;
 };
 
-export interface IButtonsFieldProps extends IReduxFormFieldProps {
+export type ButtonsFieldProps = ReduxFormFieldProps & {
   block?: boolean;
   codeName?: string;
   disabled?: boolean;
@@ -20,9 +20,9 @@ export interface IButtonsFieldProps extends IReduxFormFieldProps {
   trueFalse?: boolean;
   valueName?: string;
   vertical?: boolean;
-}
+};
 
-const ButtonsField: React.FC<IButtonsFieldProps> = ({
+const ButtonsField: React.FC<ButtonsFieldProps> = ({
   input,
   meta,
   block = true,

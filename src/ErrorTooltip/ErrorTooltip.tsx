@@ -1,19 +1,17 @@
 import * as React from "react";
-import { Tooltip, TooltipProps as IReactstrapTooltipProps } from "reactstrap";
+import { Tooltip, TooltipProps as ReactstrapTooltipProps } from "reactstrap";
 
 import styles from "./styles.module.scss";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IErrorTooltipProps
-  extends React.PropsWithChildren<
-    React.HTMLAttributes<HTMLDivElement> & {
-      [key: string]: any;
-      error: any;
-      target?: IReactstrapTooltipProps["target"];
-    }
-  > {}
+export type ErrorTooltipProps = React.PropsWithChildren<
+  React.HTMLAttributes<HTMLDivElement> & {
+    [key: string]: any;
+    error: any;
+    target?: ReactstrapTooltipProps["target"];
+  }
+>;
 
-const ErrorTooltip: React.FC<IErrorTooltipProps> = ({
+const ErrorTooltip: React.FC<ErrorTooltipProps> = ({
   error,
   target,
   children,
