@@ -31,10 +31,16 @@ const DateField: React.FC<DateFieldProps> = ({
   minDateMessage = (minDate) =>
     `Дата не может быть меньше ${format(minDate, "dd.MM.yyyy")}`,
 }) => {
+  const [tooltipHiddenState, setTooltipHiddenState] = React.useState(false);
+
   const error = getMetaError(meta);
 
   return (
-    <ErrorTooltip data-name={input.name} error={error}>
+    <ErrorTooltip
+      alwaysHidden={tooltipHiddenState}
+      data-name={input.name}
+      error={error}
+    >
       <DateFieldProvider
         calendarPosition={calendarPosition}
         defaultDate={defaultDate}
@@ -50,6 +56,8 @@ const DateField: React.FC<DateFieldProps> = ({
         meta={meta}
         minDate={minDate}
         minDateMessage={minDateMessage}
+        onCalendarClose={() => setTooltipHiddenState(false)}
+        onCalendarOpen={() => setTooltipHiddenState(true)}
       >
         <Input />
       </DateFieldProvider>

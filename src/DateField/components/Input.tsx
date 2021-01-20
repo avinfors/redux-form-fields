@@ -36,9 +36,17 @@ const InputBase: React.FC = () => {
     setTyped,
     inputProps,
     calendarPosition,
+    onCalendarOpen,
+    onCalendarClose,
   } = useDateField();
 
-  React.useEffect(() => !show && trigger.current.blur(), [trigger, show]);
+  React.useEffect(() => !show && trigger.current.blur(), [show]);
+
+  React.useEffect(() => (show ? onCalendarOpen() : onCalendarClose()), [
+    show,
+    onCalendarOpen,
+    onCalendarClose,
+  ]);
 
   const buttonClickHandler = () => setShow(!show);
 

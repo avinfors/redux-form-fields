@@ -5,6 +5,7 @@ import styles from "./styles.module.scss";
 
 export type ErrorTooltipProps = React.PropsWithChildren<
   React.HTMLAttributes<HTMLDivElement> & {
+    alwaysHidden?: boolean;
     [key: string]: any;
     error: any;
     target?: ReactstrapTooltipProps["target"];
@@ -12,6 +13,7 @@ export type ErrorTooltipProps = React.PropsWithChildren<
 >;
 
 const ErrorTooltip: React.FC<ErrorTooltipProps> = ({
+  alwaysHidden,
   error,
   target,
   children,
@@ -37,7 +39,7 @@ const ErrorTooltip: React.FC<ErrorTooltipProps> = ({
       <Tooltip
         fade={false}
         innerClassName={styles.inner}
-        isOpen={hoverState && !!error}
+        isOpen={!alwaysHidden && hoverState && !!error}
         modifiers={{ computeStyle: { x: "top" } }}
         placement="top"
         target={target || ref}

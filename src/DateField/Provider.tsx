@@ -12,7 +12,12 @@ import {
 
 type ViewType = "days" | "months" | "years";
 
-type DateFieldCtxProps = DateFieldProps & {
+type DateFieldProviderProps = DateFieldProps & {
+  onCalendarClose: () => void;
+  onCalendarOpen: () => void;
+};
+
+type DateFieldCtxProps = DateFieldProviderProps & {
   view: ViewType;
   date: Date;
   month: Date;
@@ -30,8 +35,6 @@ const DateFieldCtx = React.createContext<DateFieldCtxProps>(null);
 
 export const useDateField = (): DateFieldCtxProps =>
   React.useContext(DateFieldCtx);
-
-type DateFieldProviderProps = DateFieldProps;
 
 export const DateFieldProvider: React.FC<
   React.PropsWithChildren<DateFieldProviderProps>
