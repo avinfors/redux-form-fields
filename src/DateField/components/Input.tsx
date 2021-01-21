@@ -13,7 +13,6 @@ import { faCalendarAlt } from "@fortawesome/free-regular-svg-icons";
 
 import { useDateField } from "../Provider";
 import Calendar from "./Calendar";
-import { parse, isValid } from "../utils";
 import { getMetaError } from "../../utils";
 
 const InputBase: React.FC = () => {
@@ -33,7 +32,6 @@ const InputBase: React.FC = () => {
     setShow,
     setView,
     selectDay,
-    setTyped,
     inputProps,
     calendarPosition,
     onCalendarOpen,
@@ -53,11 +51,7 @@ const InputBase: React.FC = () => {
   const blurHandler = () => input.onBlur(input.value);
 
   const changeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const { value } = event.target;
-    const date = parse(value, "dd.MM.yyyy", 0);
-
-    setTyped(value);
-    selectDay(isValid(date) ? date : value);
+    selectDay(event.target.value);
   };
 
   const keyDownHandler = (
@@ -100,7 +94,7 @@ const InputBase: React.FC = () => {
               onKeyDown={keyDownHandler(props)}
             />
           )}
-          value={typed ?? ""}
+          value={typed}
         />
         <InputGroupAddon addonType="append">
           <Button

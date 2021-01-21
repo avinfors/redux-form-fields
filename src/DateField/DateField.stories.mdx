@@ -4,6 +4,7 @@ import addDays from "date-fns/addDays";
 import startOfDay from "date-fns/startOfDay";
 
 import DateField from "./DateField";
+import { parseDateToUTC, formatDateFromUTC } from "../../.storybook/utils";
 
 <Meta title="DateField" />
 
@@ -13,7 +14,7 @@ Using `DateField` creates an input with date picker.
 
 <Canvas>
   <Story name="Default">
-    <Field component={DateField} name="dateField.default" />
+    <Field component={DateField} name="dateField.defaultDate" />
   </Story>
 </Canvas>
 
@@ -24,6 +25,19 @@ Using `DateField` creates an input with date picker.
       maxDate={addDays(startOfDay(new Date()), 5)}
       minDate={addDays(startOfDay(new Date()), -5)}
       name="dateField.withMinAndMaxDates"
+    />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="With `input.value` in milliseconds">
+    <Field
+      component={DateField}
+      format={(value) => formatDateFromUTC(value)}
+      maxDate={addDays(startOfDay(new Date()), 10)}
+      minDate={addDays(startOfDay(new Date()), -10)}
+      name="dateField.inMs"
+      parse={(value) => parseDateToUTC(value)}
     />
   </Story>
 </Canvas>

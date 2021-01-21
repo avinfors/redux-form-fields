@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { reduxForm, reducer as form } from "redux-form";
-import { Row, Col, FormGroup } from "reactstrap";
+import { Row, Col } from "reactstrap";
 import { composeWithDevTools } from "redux-devtools-extension";
 import addDays from "date-fns/addDays";
 import startOfDay from "date-fns/startOfDay";
@@ -14,6 +14,7 @@ const store = createStore(
   {},
   composeWithDevTools(applyMiddleware())
 );
+
 const withReduxForm = (Story) => {
   const Form = reduxForm({
     form: "reduxForm",
@@ -25,6 +26,7 @@ const withReduxForm = (Story) => {
       },
       dateField: {
         withMinAndMaxDates: addDays(startOfDay(new Date()), -8),
+        inMs: new Date().getTime(),
       },
     },
     validate: (values) => {
@@ -32,21 +34,33 @@ const withReduxForm = (Story) => {
       if (Object.keys(values).length === 0) {
         return {};
       }
-      const { withMinAndMaxDates } = values.dateField;
-      if (typeof withMinAndMaxDates === "string") {
+
+      const { withMinAndMaxDates, defaultDate, inMs } = values.dateField;
+
+      if (!withMinAndMaxDates || typeof withMinAndMaxDates === "string") {
         errors.dateField = {};
-        errors.dateField.withMinAndMaxDates = withMinAndMaxDates;
+        errors.dateField.withMinAndMaxDates = withMinAndMaxDates || "Заполните";
       }
+
+      if (!defaultDate || typeof defaultDate === "string") {
+        errors.dateField = errors.dateField || {};
+        errors.dateField.defaultDate = defaultDate || "Заполните";
+      }
+
+      if (!inMs || typeof inMs === "string") {
+        errors.dateField = errors.dateField || {};
+        errors.dateField.inMs = inMs || "Заполните";
+      }
+
       return errors;
     },
   })(Story);
+
   return (
     <Provider store={store}>
       <Row form>
         <Col md={6}>
-          <FormGroup>
-            <Form />
-          </FormGroup>
+          <Form />
         </Col>
       </Row>
     </Provider>
