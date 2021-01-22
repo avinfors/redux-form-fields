@@ -13,19 +13,16 @@ export default {
     {
       file: packageJson.main,
       format: "cjs",
-      sourcemap: true,
     },
     {
       file: packageJson.module,
       format: "esm",
-      sourcemap: true,
     },
   ],
   plugins: [
     peerDepsExternal(),
     postcss({
       extract: true,
-      sourceMap: true,
       plugins: [autoprefixer],
     }),
     nodeResolve(),
