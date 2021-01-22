@@ -7,9 +7,18 @@
     border-radius: $input-border-radius !important;
     transition: $input-transition !important;
 
+    .SelectFieldError & {
+      border-color: $danger !important;
+    }
+
     &--is-focused {
       border-color: $input-focus-border-color !important;
       box-shadow: $input-focus-box-shadow !important;
+
+      .SelectFieldError & {
+        border-color: $danger !important;
+        box-shadow: 0 0 0 $input-focus-width rgba($danger, 0.25) !important;
+      }
     }
 
     &--is-disabled {
