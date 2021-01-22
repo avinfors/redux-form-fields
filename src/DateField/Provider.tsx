@@ -163,9 +163,7 @@ export const DateFieldProvider: React.FC<
   }, [meta.dirty, meta.initial, meta.visited, defaultDate, minDate, maxDate]);
 
   React.useEffect(() => {
-    if (showState) {
-      setMonthState(getInitialMonth(input.value, defaultDate));
-    }
+    showState && setMonthState(getInitialMonth(input.value, defaultDate));
   }, [showState, input.value, defaultDate]);
 
   return (
