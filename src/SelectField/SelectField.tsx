@@ -51,7 +51,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
   const [menuOpenState, setMenuOpenState] = React.useState(false);
   const [staticErrorState, setStaticErrorState] = React.useState("");
 
-  const blurHandler = () => input.onBlur(input.value);
+  const blurHandler = () => input.onBlur(undefined);
 
   const changeHandler: ReactSelectProps["onChange"] = (value) => {
     const valueProcessed = processValuesBeforeSelect(value);
