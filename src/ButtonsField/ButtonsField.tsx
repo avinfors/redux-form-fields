@@ -14,6 +14,7 @@ export type ButtonsFieldProps = ReduxFormFieldProps & {
   block?: boolean;
   codeName?: string;
   disabled?: boolean;
+  equalWidth?: boolean;
   options?: ButtonsFieldOption[];
   readOnly?: boolean;
   renderButtonName?: (option: ButtonsFieldOption) => React.ReactNode;
@@ -28,6 +29,7 @@ const ButtonsField: React.FC<ButtonsFieldProps> = ({
   block = true,
   codeName = "code",
   disabled,
+  equalWidth,
   options = [],
   readOnly,
   renderButtonName,
@@ -56,6 +58,7 @@ const ButtonsField: React.FC<ButtonsFieldProps> = ({
         {options.map((option) => (
           <Button
             key={`${input.name}-${option[codeName]}`}
+            className={classNames(block && equalWidth && "w-100")}
             color={metaError ? "danger" : "primary"}
             disabled={disabled || readOnly}
             onClick={buttonClickHandler(option)}
