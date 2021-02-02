@@ -11,6 +11,7 @@ import { getMetaError } from "../utils";
 export type DateFieldProps = ReduxFormFieldProps & {
   calendarPosition?: PopoverProps["placement"];
   defaultDate?: Date | number;
+  disabled?: boolean;
   inputProps?: ReactstrapInputProps;
   maxDate?: Date | number;
   maxDateMessage?: (maxDate: Date | number) => string;
@@ -23,6 +24,7 @@ const DateField: React.FC<DateFieldProps> = ({
   meta,
   calendarPosition = "bottom",
   defaultDate = getDefaultDate(),
+  disabled,
   inputProps = { placeholder: "дд.мм.гггг" },
   maxDate = getMaxDate(120),
   maxDateMessage = (maxDate) =>
@@ -44,6 +46,7 @@ const DateField: React.FC<DateFieldProps> = ({
       <DateFieldProvider
         calendarPosition={calendarPosition}
         defaultDate={defaultDate}
+        disabled={disabled}
         input={input}
         inputProps={{
           ...inputProps,
