@@ -23,7 +23,7 @@ const Day: React.FC<IDayProps> = ({
     <Button
       className={classNames(
         "border-0 outline-0 rounded",
-        today && !selected && "text-secondary font-weight-bold",
+        today && !selected && "font-weight-bold",
         selected && !disabled && "text-white font-weight-normal"
       )}
       color={selected ? "primary" : "link"}
