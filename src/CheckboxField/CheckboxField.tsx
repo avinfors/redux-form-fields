@@ -16,6 +16,7 @@ export type CheckboxFieldProps = ReduxFormFieldProps &
       | React.InputHTMLAttributes<HTMLInputElement>["id"];
     label?: ReactstrapCustomInputProps["label"];
     readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
+    type?: "checkbox" | "switch";
   };
 
 const CheckboxField: React.FC<CheckboxFieldProps> = ({
@@ -25,6 +26,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
   id,
   label,
   readOnly,
+  type = "checkbox",
   ...rest
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -49,7 +51,7 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({
         invalid={!!metaError}
         label={label}
         onChange={changeHandler}
-        type="checkbox"
+        type={type}
       />
     </ErrorTooltip>
   );
