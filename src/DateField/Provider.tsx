@@ -9,6 +9,7 @@ import {
   isValid,
   isBefore,
   isAfter,
+  getDefaultDate,
 } from "./utils";
 
 type ViewType = "days" | "months" | "years";
@@ -49,17 +50,48 @@ export const DateFieldProvider: React.FC<
     maxDate,
     maxDateMessage,
   } = props;
+
+  const prevDirty = React.useRef(meta.dirty);
+  const errorTypedState = React.useRef(null);
+
+  const inputTime = React.useMemo(
+    () => (input.value instanceof Date ? input.value.getTime() : undefined),
+    [input.value]
+  );
+
+  const minDateTime = React.useMemo(
+    () =>
+      minDate instanceof Date && isValid(minDate)
+        ? minDate.getTime()
+        : getDefaultDate().getTime(),
+    [minDate]
+  );
+
+  const maxDateTime = React.useMemo(
+    () =>
+      maxDate instanceof Date && isValid(maxDate)
+        ? maxDate.getTime()
+        : getDefaultDate().getTime(),
+    [maxDate]
+  );
+
+  const defaultDateTime = React.useMemo(
+    () =>
+      defaultDate instanceof Date && isValid(defaultDate)
+        ? defaultDate.getTime()
+        : minDateTime,
+    [defaultDate, minDateTime]
+  );
+
   const [viewState, setViewState] = React.useState<ViewType>("days");
   const [dateState, setDateState] = React.useState(() =>
-    getInitialDate(input.value)
+    getInitialDate(inputTime)
   );
   const [monthState, setMonthState] = React.useState(() =>
-    getInitialMonth(input.value, defaultDate)
+    getInitialMonth(inputTime, defaultDateTime)
   );
   const [showState, setShowState] = React.useState(false);
   const [typedState, setTypedState] = React.useState("");
-
-  const prevDirty = React.useRef(meta.dirty);
 
   const selectDay = React.useCallback(
     (day) => {
@@ -76,7 +108,7 @@ export const DateFieldProvider: React.FC<
       }
 
       if (value instanceof Date) {
-        if (!isBefore(value, minDate) && !isAfter(value, maxDate)) {
+        if (!isBefore(value, minDateTime) && !isAfter(value, maxDateTime)) {
           setDateState(value);
           setMonthState(value);
         }
@@ -86,22 +118,20 @@ export const DateFieldProvider: React.FC<
         }
       } else {
         setDateState(getInitialDate(undefined));
-        setMonthState(getInitialMonth(undefined, defaultDate));
+        setMonthState(getInitialMonth(undefined, defaultDateTime));
         input.onChange(undefined);
       }
 
       setShowState(false);
     },
-    [input, defaultDate, maxDate, minDate]
+    [input, defaultDateTime, maxDateTime, minDateTime]
   );
 
   React.useEffect(() => {
-    const value = input.value;
-
-    if (value instanceof Date) {
-      setTypedState((prev) => (prev !== "" ? prev : format(value)));
+    if (inputTime !== undefined) {
+      setTypedState((prev) => (prev !== "" ? prev : format(inputTime)));
     }
-  }, [input.value]);
+  }, [inputTime]);
 
   React.useEffect(() => {
     const { value, onChange, onBlur } = input;
@@ -109,10 +139,10 @@ export const DateFieldProvider: React.FC<
     if (value instanceof Date) {
       let error = "";
 
-      if (isBefore(value, minDate)) {
-        error = minDateMessage(minDate);
-      } else if (isAfter(value, maxDate)) {
-        error = maxDateMessage(maxDate);
+      if (isBefore(value, minDateTime)) {
+        error = minDateMessage(minDateTime);
+      } else if (isAfter(value, maxDateTime)) {
+        error = maxDateMessage(maxDateTime);
       }
 
       if (error !== "") {
@@ -122,17 +152,35 @@ export const DateFieldProvider: React.FC<
         }
 
         setDateState(getInitialDate(undefined));
-        setMonthState(getInitialMonth(undefined, defaultDate));
+        setMonthState(getInitialMonth(undefined, defaultDateTime));
+        errorTypedState.current = typedState;
+      }
+    } else {
+      if (errorTypedState.current === typedState) {
+        const parsedDate = parse(typedState, "dd.MM.yyyy", 0);
+        if (isValid(parsedDate)) {
+          if (
+            !isBefore(parsedDate, minDateTime) &&
+            !isAfter(parsedDate, maxDateTime)
+          ) {
+            setDateState(parsedDate);
+            setMonthState(parsedDate);
+            input.onChange(parsedDate);
+            input.onBlur(parsedDate);
+            errorTypedState.current = null;
+          }
+        }
       }
     }
   }, [
     input,
     meta.active,
-    minDate,
-    maxDate,
+    minDateTime,
+    maxDateTime,
     minDateMessage,
     maxDateMessage,
-    defaultDate,
+    defaultDateTime,
+    typedState,
   ]);
 
   React.useEffect(() => {
@@ -146,7 +194,7 @@ export const DateFieldProvider: React.FC<
       if (initial instanceof Date || typeof initial === "number") {
         typed = format(initial);
 
-        if (!isBefore(initial, minDate) && !isAfter(initial, maxDate)) {
+        if (!isBefore(initial, minDateTime) && !isAfter(initial, maxDateTime)) {
           const value = initial instanceof Date ? initial : new Date(initial);
 
           setDateState(value);
@@ -154,22 +202,38 @@ export const DateFieldProvider: React.FC<
         }
       } else {
         setDateState(getInitialDate(undefined));
-        setMonthState(getInitialMonth(undefined, defaultDate));
+        setMonthState(getInitialMonth(undefined, defaultDateTime));
       }
       setTypedState(typed);
     }
 
     return () => (prevDirty.current = dirty);
-  }, [meta.dirty, meta.initial, meta.visited, defaultDate, minDate, maxDate]);
+  }, [
+    meta.dirty,
+    meta.initial,
+    meta.visited,
+    defaultDateTime,
+    minDateTime,
+    maxDateTime,
+  ]);
 
   React.useEffect(() => {
-    showState && setMonthState(getInitialMonth(input.value, defaultDate));
-  }, [showState, input.value, defaultDate]);
+    showState && setMonthState(getInitialMonth(inputTime, defaultDateTime));
+  }, [showState, inputTime, defaultDateTime]);
 
   return (
     <DateFieldCtx.Provider
       value={{
         ...props,
+        inputProps: {
+          ...props.inputProps,
+          "data-mindate": format(minDateTime, "dd.MM.yyyy"),
+          "data-maxdate": format(maxDateTime, "dd.MM.yyyy"),
+          "data-defaultdate": format(defaultDateTime, "dd.MM.yyyy"),
+        },
+        minDate: minDateTime,
+        maxDate: maxDateTime,
+        defaultDate: defaultDateTime,
         view: viewState,
         date: dateState,
         month: monthState,
