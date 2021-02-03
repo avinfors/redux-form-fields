@@ -12,7 +12,6 @@ import {
   isAfter,
   isBefore,
   isEqual,
-  isToday,
   startOfMonth,
 } from "../utils";
 
@@ -52,7 +51,6 @@ const WeekRows: React.FC = () => {
               disabled={isDayDisabled(day)}
               onClick={dayClickHandler(day)}
               selected={isEqual(day, date)}
-              today={isToday(day)}
             />
           ))}
         </ButtonGroup>
