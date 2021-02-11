@@ -81,7 +81,7 @@ const InputBase: React.FC = () => {
         <MaskedInput
           {...input}
           {...inputProps}
-          keepCharPositions={false}
+          keepCharPositions
           mask={[/\d/, /\d/, ".", /\d/, /\d/, ".", /\d/, /\d/, /\d/, /\d/]}
           onChange={changeHandler}
           pipe={pipe}
