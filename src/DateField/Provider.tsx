@@ -120,12 +120,12 @@ export const DateFieldProvider: React.FC<
       } else {
         setDateState(getInitialDate(undefined));
         setMonthState(getInitialMonth(undefined, defaultDateTime));
-        input.onChange(undefined);
+        input.onChange(meta.initial ? "" : undefined);
       }
 
       setShowState(false);
     },
-    [input, defaultDateTime, maxDateTime, minDateTime]
+    [input, defaultDateTime, maxDateTime, minDateTime, meta.initial]
   );
 
   React.useEffect(() => {
