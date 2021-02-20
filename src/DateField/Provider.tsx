@@ -76,7 +76,7 @@ export class DateFieldProvider extends React.Component<
     prevState: DateFieldProviderState
   ): void {
     const { show: _show } = prevState;
-    const { show } = this.state;
+    const { show, typed } = this.state;
     const { input: _input, minDate: _minDate, maxDate: _maxDate } = prevProps;
     const { input, defaultDate, minDate, maxDate } = this.props;
 
@@ -85,7 +85,16 @@ export class DateFieldProvider extends React.Component<
     }
 
     if (!isEqual(_minDate, minDate) || !isEqual(_maxDate, maxDate)) {
-      this.validate(input.value);
+      if (input.value instanceof Date) {
+        this.validate(input.value);
+      } else if (typed !== "" && typeof input.value === "string") {
+        const parsedDate = parse(typed as string, "dd.MM.yyyy", 0);
+
+        if (isValid(parsedDate) && this.validate(parsedDate)) {
+          input.onChange(parsedDate);
+          input.onBlur(parsedDate);
+        }
+      }
     }
 
     let valuesIsEqual = true;
