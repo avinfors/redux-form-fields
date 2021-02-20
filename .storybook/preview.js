@@ -5,6 +5,7 @@ import { Row, Col } from "reactstrap";
 import { composeWithDevTools } from "redux-devtools-extension";
 import addDays from "date-fns/addDays";
 import startOfDay from "date-fns/startOfDay";
+import { isMs } from "./utils";
 
 import "./styles.scss";
 
@@ -47,9 +48,12 @@ const withReduxForm = (Story) => {
         errors.dateField.defaultDate = defaultDate || "Заполните";
       }
 
-      if (!inMs || typeof inMs === "string") {
+      if (!isMs(inMs) && !!inMs) {
         errors.dateField = errors.dateField || {};
-        errors.dateField.inMs = inMs || "Заполните";
+        errors.dateField.inMs = inMs;
+      } else if (!isMs(inMs)) {
+        errors.dateField = errors.dateField || {};
+        errors.dateField.inMs = "Заполните";
       }
 
       return errors;

@@ -12,11 +12,11 @@ const fromUTC = (value) => {
   return getTime(addMinutes(date, date.getTimezoneOffset()));
 };
 
-const isMs = (value) => value === parseInt(value);
+export const isMs = (value) => value === parseInt(value);
 
 export const parseDateToUTC = (value) => {
-  if (value === undefined || value === null) {
-    return undefined;
+  if (!value) {
+    return value;
   }
   if (isNaN(value) || !isDate(new Date(value))) {
     return value;
