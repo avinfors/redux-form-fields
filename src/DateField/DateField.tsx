@@ -17,6 +17,7 @@ export type DateFieldProps = ReduxFormFieldProps & {
   maxDateMessage?: (maxDate: Date | number) => string;
   minDate?: Date | number;
   minDateMessage?: (minDate: Date | number) => string;
+  prepend?: React.ReactNode;
 };
 
 const DateField: React.FC<DateFieldProps> = ({
@@ -25,6 +26,7 @@ const DateField: React.FC<DateFieldProps> = ({
   calendarPosition = "bottom",
   defaultDate = getDefaultDate(),
   disabled,
+  prepend,
   inputProps = { placeholder: "дд.мм.гггг" },
   maxDate = getMaxDate(120),
   maxDateMessage = (maxDate) =>
@@ -47,6 +49,7 @@ const DateField: React.FC<DateFieldProps> = ({
         calendarPosition={calendarPosition}
         defaultDate={defaultDate}
         disabled={disabled}
+        prepend={prepend}
         input={input}
         inputProps={{
           ...inputProps,

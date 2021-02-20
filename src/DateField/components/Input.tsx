@@ -37,6 +37,7 @@ const InputBase: React.FC = () => {
     onCalendarOpen,
     onCalendarClose,
     disabled,
+    prepend,
   } = useDateField();
 
   React.useEffect(() => {
@@ -78,6 +79,9 @@ const InputBase: React.FC = () => {
   return (
     <>
       <InputGroup>
+        {prepend && (
+          <InputGroupAddon addonType="prepend">{prepend}</InputGroupAddon>
+        )}
         <MaskedInput
           {...input}
           {...inputProps}

@@ -9,7 +9,7 @@ import {
   isValid,
   isBefore,
   isAfter,
-  getDefaultDate,
+  isEqual,
 } from "./utils";
 
 type ViewType = "days" | "months" | "years";
@@ -17,6 +17,14 @@ type ViewType = "days" | "months" | "years";
 type DateFieldProviderProps = DateFieldProps & {
   onCalendarClose: () => void;
   onCalendarOpen: () => void;
+};
+
+type DateFieldProviderState = {
+  view: ViewType;
+  date: Date;
+  month: Date;
+  show: boolean;
+  typed: string;
 };
 
 type DateFieldCtxProps = DateFieldProviderProps & {
@@ -37,219 +45,199 @@ const DateFieldCtx = React.createContext<DateFieldCtxProps>(null);
 
 export const useDateField = (): DateFieldCtxProps =>
   React.useContext(DateFieldCtx);
+export class DateFieldProvider extends React.Component<
+  DateFieldProviderProps,
+  DateFieldProviderState
+> {
+  state: DateFieldProviderState = {
+    view: "days",
+    date: getInitialDate(this.props.input.value),
+    month: getInitialMonth(this.props.input.value, this.props.defaultDate),
+    show: false,
+    typed: "",
+  };
 
-export const DateFieldProvider: React.FC<
-  React.PropsWithChildren<DateFieldProviderProps>
-> = ({ children, ...props }) => {
-  const {
-    input,
-    meta,
-    defaultDate,
-    disabled,
-    minDate,
-    minDateMessage,
-    maxDate,
-    maxDateMessage,
-  } = props;
+  componentDidMount(): void {
+    const { input, meta } = this.props;
+    const { typed } = this.state;
+    const day = input.value;
+    const selectedDate = day instanceof Date;
 
-  const prevDirty = React.useRef(meta.dirty);
-  const errorTypedState = React.useRef(null);
+    if (selectedDate) {
+      this.setTypedState(format(day));
+      this.validate(day);
+    } else if (!typed) {
+      input.onChange(meta.initial ? "" : undefined);
+    }
+  }
 
-  const inputTime = React.useMemo(
-    () => (input.value instanceof Date ? input.value.getTime() : undefined),
-    [input.value]
-  );
+  componentDidUpdate(
+    prevProps: DateFieldProviderProps,
+    prevState: DateFieldProviderState
+  ): void {
+    const { show: _show } = prevState;
+    const { show } = this.state;
+    const { input: _input, minDate: _minDate, maxDate: _maxDate } = prevProps;
+    const { input, defaultDate, minDate, maxDate } = this.props;
 
-  const minDateTime = React.useMemo(
-    () =>
-      minDate instanceof Date && isValid(minDate)
-        ? minDate.getTime()
-        : getDefaultDate().getTime(),
-    [minDate]
-  );
+    if (!_show && show) {
+      this.setMonthState(getInitialMonth(input.value, defaultDate));
+    }
 
-  const maxDateTime = React.useMemo(
-    () =>
-      maxDate instanceof Date && isValid(maxDate)
-        ? maxDate.getTime()
-        : getDefaultDate().getTime(),
-    [maxDate]
-  );
+    if (!isEqual(_minDate, minDate) || !isEqual(_maxDate, maxDate)) {
+      this.validate(input.value);
+    }
 
-  const defaultDateTime = React.useMemo(
-    () =>
-      defaultDate instanceof Date && isValid(defaultDate)
-        ? defaultDate.getTime()
-        : minDateTime,
-    [defaultDate, minDateTime]
-  );
+    let valuesIsEqual = true;
+    const prevValue = _input.value;
+    const thisValue = input.value;
+    const prevValueIsDate = prevValue instanceof Date;
+    const thisValueIsDate = thisValue instanceof Date;
 
-  const [viewState, setViewState] = React.useState<ViewType>("days");
-  const [dateState, setDateState] = React.useState(() =>
-    getInitialDate(inputTime)
-  );
-  const [monthState, setMonthState] = React.useState(() =>
-    getInitialMonth(inputTime, defaultDateTime)
-  );
-  const [showState, setShowState] = React.useState(false);
-  const [typedState, setTypedState] = React.useState("");
+    if (prevValueIsDate && thisValueIsDate && !isEqual(prevValue, thisValue)) {
+      valuesIsEqual = false;
+    }
 
-  const selectDay = React.useCallback(
-    (day) => {
-      let value = day;
-      const selected = day instanceof Date;
-      setTypedState(selected ? format(day) : day);
+    if (!prevValueIsDate && !thisValueIsDate && prevValue !== thisValue) {
+      valuesIsEqual = false;
+    }
 
-      if (!selected) {
-        const parsedDate = parse(day, "dd.MM.yyyy", 0);
+    if (prevValueIsDate !== thisValueIsDate) {
+      valuesIsEqual = false;
+    }
 
-        if (isValid(parsedDate)) {
-          value = parsedDate;
-        }
-      }
-
-      if (value instanceof Date) {
-        if (!isBefore(value, minDateTime) && !isAfter(value, maxDateTime)) {
-          setDateState(value);
-          setMonthState(value);
-        }
-        input.onChange(value);
-        if (selected) {
-          input.onBlur(value);
+    if (!valuesIsEqual) {
+      if (thisValueIsDate) {
+        this.setTypedState(format(thisValue));
+        const isValid = this.validate(thisValue);
+        if (isValid) {
+          this.setMonthState(thisValue);
+          this.setDateState(thisValue);
+        } else {
+          this.setDateState(getInitialDate(undefined));
+          this.setMonthState(getInitialMonth(undefined, defaultDate));
         }
       } else {
-        setDateState(getInitialDate(undefined));
-        setMonthState(getInitialMonth(undefined, defaultDateTime));
-        input.onChange(meta.initial ? "" : undefined);
+        this.setDateState(getInitialDate(undefined));
+        this.setMonthState(getInitialMonth(undefined, defaultDate));
       }
-
-      setShowState(false);
-    },
-    [input, defaultDateTime, maxDateTime, minDateTime, meta.initial]
-  );
-
-  React.useEffect(() => {
-    if (inputTime !== undefined) {
-      setTypedState((prev) => (prev !== "" ? prev : format(inputTime)));
     }
-  }, [inputTime]);
+  }
 
-  React.useEffect(() => {
-    const { value, onChange, onBlur } = input;
+  validate = (selected: Date): boolean => {
+    const {
+      minDate,
+      maxDate,
+      minDateMessage,
+      maxDateMessage,
+      input,
+      meta,
+    } = this.props;
 
-    if (value instanceof Date) {
+    if (selected instanceof Date) {
       let error = "";
 
-      if (isBefore(value, minDateTime)) {
-        error = minDateMessage(minDateTime);
-      } else if (isAfter(value, maxDateTime)) {
-        error = maxDateMessage(maxDateTime);
+      if (isBefore(selected, minDate)) {
+        error = minDateMessage(minDate);
+      } else if (isAfter(selected, maxDate)) {
+        error = maxDateMessage(maxDate);
       }
 
       if (error !== "") {
-        onChange(error);
-        if (!meta.active) {
-          onBlur(error);
-        }
+        input.onChange(error);
 
-        setDateState(getInitialDate(undefined));
-        setMonthState(getInitialMonth(undefined, defaultDateTime));
-        errorTypedState.current = typedState;
+        if (!meta.active) {
+          input.onBlur(error);
+        }
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  setViewState = (view: ViewType): void => {
+    this.setState({ view });
+  };
+
+  setDateState = (date: Date): void => {
+    this.setState({ date });
+  };
+
+  setMonthState = (month: Date): void => {
+    this.setState({ month });
+  };
+
+  setShowState = (show: boolean): void => {
+    this.setState({ show });
+  };
+
+  setTypedState = (typed: string): void => {
+    this.setState({ typed });
+  };
+
+  selectDay = (day: string | Date): void => {
+    const { input, meta } = this.props;
+    let value = day;
+    const selected = day instanceof Date;
+
+    this.setTypedState(selected ? format(day as Date) : (day as string));
+
+    if (!selected) {
+      const parsedDate = parse(day as string, "dd.MM.yyyy", 0);
+
+      if (isValid(parsedDate)) {
+        value = parsedDate;
+      }
+    }
+
+    if (value instanceof Date) {
+      input.onChange(value);
+
+      if (selected) {
+        input.onBlur(value);
       }
     } else {
-      if (errorTypedState.current === typedState) {
-        const parsedDate = parse(typedState, "dd.MM.yyyy", 0);
-        if (isValid(parsedDate)) {
-          if (
-            !isBefore(parsedDate, minDateTime) &&
-            !isAfter(parsedDate, maxDateTime)
-          ) {
-            setDateState(parsedDate);
-            setMonthState(parsedDate);
-            input.onChange(parsedDate);
-            input.onBlur(parsedDate);
-            errorTypedState.current = null;
-          }
-        }
-      }
-    }
-  }, [
-    input,
-    meta.active,
-    minDateTime,
-    maxDateTime,
-    minDateMessage,
-    maxDateMessage,
-    defaultDateTime,
-    typedState,
-  ]);
-
-  React.useEffect(() => {
-    const dirty = meta.dirty;
-    const initial = meta.initial;
-    const visited = meta.visited;
-
-    if (prevDirty && !dirty && !visited) {
-      let typed = "";
-
-      if (initial instanceof Date || typeof initial === "number") {
-        typed = format(initial);
-
-        if (!isBefore(initial, minDateTime) && !isAfter(initial, maxDateTime)) {
-          const value = initial instanceof Date ? initial : new Date(initial);
-
-          setDateState(value);
-          setMonthState(value);
-        }
-      } else {
-        setDateState(getInitialDate(undefined));
-        setMonthState(getInitialMonth(undefined, defaultDateTime));
-      }
-      setTypedState(typed);
+      input.onChange(meta.initial !== undefined ? "" : undefined);
     }
 
-    return () => (prevDirty.current = dirty);
-  }, [
-    meta.dirty,
-    meta.initial,
-    meta.visited,
-    defaultDateTime,
-    minDateTime,
-    maxDateTime,
-  ]);
+    this.setShowState(false);
+  };
 
-  React.useEffect(() => {
-    showState && setMonthState(getInitialMonth(inputTime, defaultDateTime));
-  }, [showState, inputTime, defaultDateTime]);
-
-  return (
-    <DateFieldCtx.Provider
-      value={{
-        ...props,
-        inputProps: {
-          ...props.inputProps,
-          "data-mindate": format(minDateTime, "dd.MM.yyyy"),
-          "data-maxdate": format(maxDateTime, "dd.MM.yyyy"),
-          "data-defaultdate": format(defaultDateTime, "dd.MM.yyyy"),
-        },
-        minDate: minDateTime,
-        maxDate: maxDateTime,
-        defaultDate: defaultDateTime,
-        disabled,
-        view: viewState,
-        date: dateState,
-        month: monthState,
-        show: showState,
-        typed: typedState,
-        setView: setViewState,
-        setDate: setDateState,
-        setMonth: setMonthState,
-        setShow: setShowState,
-        setTyped: setTypedState,
-        selectDay,
-      }}
-    >
-      {children}
-    </DateFieldCtx.Provider>
-  );
-};
+  render(): JSX.Element {
+    const { children, ...props } = this.props;
+    const { view, date, month, show, typed } = this.state;
+    const { defaultDate, disabled, minDate, maxDate, prepend } = props;
+    return (
+      <DateFieldCtx.Provider
+        value={{
+          ...props,
+          inputProps: {
+            ...props.inputProps,
+            "data-mindate": format(minDate, "dd.MM.yyyy"),
+            "data-maxdate": format(maxDate, "dd.MM.yyyy"),
+            "data-defaultdate": format(defaultDate, "dd.MM.yyyy"),
+          },
+          minDate,
+          maxDate,
+          defaultDate,
+          disabled,
+          prepend,
+          view,
+          date,
+          month,
+          show,
+          typed,
+          setView: this.setViewState,
+          setDate: this.setDateState,
+          setMonth: this.setMonthState,
+          setShow: this.setShowState,
+          setTyped: this.setTypedState,
+          selectDay: this.selectDay,
+        }}
+      >
+        {children}
+      </DateFieldCtx.Provider>
+    );
+  }
+}
