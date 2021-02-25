@@ -51,8 +51,17 @@ export class DateFieldProvider extends React.Component<
 > {
   state: DateFieldProviderState = {
     view: "days",
-    date: getInitialDate(this.props.input.value),
-    month: getInitialMonth(this.props.input.value, this.props.defaultDate),
+    date: getInitialDate(
+      this.props.input.value instanceof Date
+        ? this.props.input.value
+        : undefined
+    ),
+    month: getInitialMonth(
+      this.props.input.value instanceof Date
+        ? this.props.input.value
+        : undefined,
+      this.props.defaultDate
+    ),
     show: false,
     typed: "",
   };
@@ -80,8 +89,15 @@ export class DateFieldProvider extends React.Component<
     const { input: _input, minDate: _minDate, maxDate: _maxDate } = prevProps;
     const { input, defaultDate, minDate, maxDate } = this.props;
 
+    const prevValue = _input.value;
+    const thisValue = input.value;
+    const prevValueIsDate = prevValue instanceof Date;
+    const thisValueIsDate = thisValue instanceof Date;
+
     if (!_show && show) {
-      this.setMonthState(getInitialMonth(input.value, defaultDate));
+      this.setMonthState(
+        getInitialMonth(thisValueIsDate ? thisValue : undefined, defaultDate)
+      );
     }
 
     if (!isEqual(_minDate, minDate) || !isEqual(_maxDate, maxDate)) {
@@ -98,10 +114,6 @@ export class DateFieldProvider extends React.Component<
     }
 
     let valuesIsEqual = true;
-    const prevValue = _input.value;
-    const thisValue = input.value;
-    const prevValueIsDate = prevValue instanceof Date;
-    const thisValueIsDate = thisValue instanceof Date;
 
     if (prevValueIsDate && thisValueIsDate && !isEqual(prevValue, thisValue)) {
       valuesIsEqual = false;
