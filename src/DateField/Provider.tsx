@@ -141,6 +141,10 @@ export class DateFieldProvider extends React.Component<
       } else {
         this.setDateState(getInitialDate(undefined));
         this.setMonthState(getInitialMonth(undefined, defaultDate));
+
+        if (!thisValue) {
+          this.setTypedState("");
+        }
       }
     }
   }
