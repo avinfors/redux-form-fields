@@ -31,7 +31,7 @@ const MaskedField: React.FC<MaskedFieldProps> = ({
   mask,
   pipe,
   placeholder,
-  placeholderChar,
+  placeholderChar = "_",
   ...rest
 }) => {
   const blurHandler: React.FocusEventHandler<HTMLInputElement> = (event) => {
