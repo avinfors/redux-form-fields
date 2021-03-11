@@ -13,6 +13,7 @@ export type DateFieldProps = ReduxFormFieldProps & {
   defaultDate?: Date | number;
   disabled?: boolean;
   inputProps?: ReactstrapInputProps;
+  locale?: string;
   maxDate?: Date | number;
   maxDateMessage?: (maxDate: Date | number) => string;
   minDate?: Date | number;
@@ -28,6 +29,7 @@ const DateField: React.FC<DateFieldProps> = ({
   disabled,
   prepend,
   inputProps = { placeholder: "дд.мм.гггг" },
+  locale,
   maxDate = getMaxDate(120),
   maxDateMessage = (maxDate) =>
     `Дата не может быть больше ${format(maxDate, "dd.MM.yyyy")}`,
@@ -57,6 +59,7 @@ const DateField: React.FC<DateFieldProps> = ({
           "data-maxdate": format(maxDate, "dd.MM.yyyy"),
           "data-defaultdate": format(defaultDate, "dd.MM.yyyy"),
         }}
+        locale={locale}
         maxDate={maxDate}
         maxDateMessage={maxDateMessage}
         meta={meta}

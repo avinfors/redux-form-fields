@@ -15,8 +15,8 @@ import {
 } from "../utils";
 
 const Header: React.FC = () => {
-  const { month, setMonth, setView, minDate, maxDate } = useDateField();
-  const mounthName = format(month, "LLLL");
+  const { month, setMonth, setView, minDate, maxDate, locale } = useDateField();
+  const mounthName = format(month, "LLLL", locale);
   const year = getYear(month);
 
   const prevClickHandler = () => setMonth(subMonths(month, 1));

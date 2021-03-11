@@ -20,7 +20,7 @@ import {
 } from "../utils";
 
 const Months: React.FC = () => {
-  const { month, minDate, maxDate, setMonth, setView } = useDateField();
+  const { month, minDate, maxDate, setMonth, setView, locale } = useDateField();
 
   const prevClickHandler = () => setMonth(subYears(month, 1));
 
@@ -132,7 +132,7 @@ const Months: React.FC = () => {
         {rows.map((row, index) => (
           <ButtonGroup key={index} className="w-100" size="sm">
             {row.map((day) => {
-              const monthName = format(day, "LLL");
+              const monthName = format(day, "LLL", locale);
               const disabled = isMonthDisabled(day);
               const selected = isMonthSelected(day);
 

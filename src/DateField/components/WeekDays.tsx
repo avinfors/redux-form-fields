@@ -5,7 +5,7 @@ import { useDateField } from "../Provider";
 import { startOfWeek, endOfWeek, eachDayOfInterval, format } from "../utils";
 
 const WeekDays: React.FC = () => {
-  const { month } = useDateField();
+  const { month, locale } = useDateField();
 
   const start = startOfWeek(month, { weekStartsOn: 1 });
   const end = endOfWeek(month, { weekStartsOn: 1 });
@@ -15,7 +15,7 @@ const WeekDays: React.FC = () => {
     <ButtonGroup className="w-100" size="sm">
       {days.map((day) => (
         <Button key={day.getDate()} color="link" disabled>
-          {format(day, "EEEEEE")}
+          {format(day, "EEEEEE", locale)}
         </Button>
       ))}
     </ButtonGroup>

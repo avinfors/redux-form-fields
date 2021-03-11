@@ -25,10 +25,13 @@ import startOfWeek from "date-fns/startOfWeek";
 import startOfYear from "date-fns/startOfYear";
 import subMonths from "date-fns/subMonths";
 import subYears from "date-fns/subYears";
-import { ru } from "date-fns/locale";
+import * as locales from "date-fns/locale";
 
-export const format = (date: Date | number, to = "dd.MM.yyyy"): string =>
-  formatDate(date, to, { locale: ru });
+export const format = (
+  date: Date | number,
+  to = "dd.MM.yyyy",
+  locale = "ru"
+): string => formatDate(date, to, { locale: locales[locale] });
 
 export const getInitialMonth = (
   value: Date | number | undefined,
