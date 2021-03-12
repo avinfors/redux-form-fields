@@ -6,6 +6,7 @@ import {
   InputGroup,
   InputGroupAddon,
   Button,
+  ButtonProps,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -17,6 +18,7 @@ export type PasswordFieldProps = ReduxFormFieldProps &
   ReactstrapInputProps & {
     disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
     placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
+    buttonColor?: ButtonProps["color"];
   };
 
 const PasswordField: React.FC<PasswordFieldProps> = ({
@@ -24,6 +26,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   meta,
   disabled,
   placeholder,
+  buttonColor = "primary",
   ...rest
 }) => {
   const [showPasswordState, setShowPasswordState] = React.useState(false);
@@ -44,7 +47,12 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
           type={showPasswordState ? "text" : "password"}
         />
         <InputGroupAddon addonType="append">
-          <Button disabled={disabled} onClick={addonClickHandler} outline>
+          <Button
+            disabled={disabled}
+            onClick={addonClickHandler}
+            outline
+            color={buttonColor}
+          >
             <FontAwesomeIcon
               fixedWidth
               icon={showPasswordState ? faEye : faEyeSlash}
