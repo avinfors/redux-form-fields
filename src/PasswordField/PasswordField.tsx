@@ -19,6 +19,7 @@ export type PasswordFieldProps = ReduxFormFieldProps &
     disabled?: React.InputHTMLAttributes<HTMLInputElement>["disabled"];
     placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
     buttonColor?: ButtonProps["color"];
+    noPast?: boolean;
   };
 
 const PasswordField: React.FC<PasswordFieldProps> = ({
@@ -26,12 +27,21 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   meta,
   disabled,
   placeholder,
+  noPast,
   buttonColor = "primary",
   ...rest
 }) => {
   const [showPasswordState, setShowPasswordState] = React.useState(false);
 
   const addonClickHandler = () => setShowPasswordState(!showPasswordState);
+
+  const pastHandler: React.ClipboardEventHandler<HTMLInputElement> = (
+    event
+  ) => {
+    if (noPast) {
+      event.preventDefault();
+    }
+  };
 
   const metaError = getMetaError(meta);
 
@@ -43,6 +53,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
           {...rest}
           disabled={disabled}
           invalid={!!metaError}
+          onPaste={pastHandler}
           placeholder={placeholder}
           type={showPasswordState ? "text" : "password"}
         />
