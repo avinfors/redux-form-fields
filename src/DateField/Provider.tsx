@@ -87,7 +87,7 @@ export class DateFieldProvider extends React.Component<
     const { show: _show } = prevState;
     const { show, typed } = this.state;
     const { input: _input, minDate: _minDate, maxDate: _maxDate } = prevProps;
-    const { input, defaultDate, minDate, maxDate } = this.props;
+    const { input, defaultDate, minDate, maxDate, meta } = this.props;
 
     const prevValue = _input.value;
     const thisValue = input.value;
@@ -142,7 +142,7 @@ export class DateFieldProvider extends React.Component<
         this.setDateState(getInitialDate(undefined));
         this.setMonthState(getInitialMonth(undefined, defaultDate));
 
-        if (!thisValue) {
+        if (!thisValue && !meta.active) {
           this.setTypedState("");
         }
       }
