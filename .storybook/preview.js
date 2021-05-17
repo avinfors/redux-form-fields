@@ -29,6 +29,9 @@ const withReduxForm = (Story) => {
         withMinAndMaxDates: addDays(startOfDay(new Date()), -8),
         inMs: new Date().getTime(),
       },
+      rangeField: {
+        simple: 12.5,
+      },
     },
     validate: (values) => {
       const errors = {};
@@ -54,6 +57,15 @@ const withReduxForm = (Story) => {
       } else if (!isMs(inMs)) {
         errors.dateField = errors.dateField || {};
         errors.dateField.inMs = "Заполните";
+      }
+
+      const { simple } = values.rangeField;
+      if (!simple) {
+        errors.rangeField = errors.rangeField || {};
+        errors.rangeField.simple = "Заполните";
+      } else if (simple > 20) {
+        errors.rangeField = errors.rangeField || {};
+        errors.rangeField.simple = "Не больше 20";
       }
 
       return errors;
