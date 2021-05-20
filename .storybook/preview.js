@@ -68,6 +68,12 @@ const withReduxForm = (Story) => {
         errors.rangeField.simple = "Не больше 20";
       }
 
+      const {simple: selectSimple} = values.selectField || {};
+      if (!selectSimple) {
+        errors.selectField = errors.selectField || {};
+        errors.selectField.simple = "Заполните";
+      }
+
       return errors;
     },
   })(Story);

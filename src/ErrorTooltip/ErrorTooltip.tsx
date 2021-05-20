@@ -32,8 +32,11 @@ const ErrorTooltip: React.FC<ErrorTooltipProps> = ({
     <div
       {...rest}
       ref={ref}
+      tabIndex={-1}
       onMouseEnter={mouseEnterHandler}
       onMouseLeave={mouseLeaveHandler}
+      onTouchStart={mouseEnterHandler}
+      onBlur={mouseLeaveHandler}
     >
       {children}
       <Tooltip
