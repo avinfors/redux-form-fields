@@ -1,6 +1,6 @@
 {
   "name": "@avinfors/redux-form-fields",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "form field react components for redux-form",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
