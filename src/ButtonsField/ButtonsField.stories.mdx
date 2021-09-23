@@ -109,6 +109,24 @@ Using `ButtonsField` creates a group of buttons those behave like 'radio' button
   </Story>
 </Canvas>
 
+<Canvas>
+  <Story name="Not wrapped with ButtonGroup">
+    <Field
+      component={ButtonsField}
+      name="buttonsField.withoutBtnGroup"
+      buttonsPerRow={2}
+      options={[
+        { code: 1, name: "100" },
+        { code: 2, name: "5000" },
+        { code: 3, name: "10000" },
+        { code: 4, name: "50" },
+        { code: 5, name: "250000" },
+        { code: 6, name: "1000000" },
+      ]}
+    />
+  </Story>
+</Canvas>
+
 ## Props
 
 <ArgsTable of={ButtonsField} />

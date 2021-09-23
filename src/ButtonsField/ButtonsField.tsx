@@ -1,9 +1,10 @@
 import * as React from "react";
 import { WrappedFieldProps as ReduxFormFieldProps } from "redux-form";
-import { Button, ButtonGroup } from "reactstrap";
+import { ButtonGroup, Row, Col } from "reactstrap";
 import classNames from "classnames";
 
 import ErrorTooltip from "../ErrorTooltip";
+import Item from "./components/Item";
 import { getMetaError } from "../utils";
 
 export type ButtonsFieldOption = {
@@ -12,6 +13,7 @@ export type ButtonsFieldOption = {
 
 export type ButtonsFieldProps = ReduxFormFieldProps & {
   block?: boolean;
+  buttonsPerRow: number;
   codeName?: string;
   disabled?: boolean;
   equalWidth?: boolean;
@@ -27,6 +29,7 @@ const ButtonsField: React.FC<ButtonsFieldProps> = ({
   input,
   meta,
   block = true,
+  buttonsPerRow,
   codeName = "code",
   disabled,
   equalWidth,
@@ -51,28 +54,56 @@ const ButtonsField: React.FC<ButtonsFieldProps> = ({
 
   return (
     <ErrorTooltip data-name={input.name} error={metaError} tabIndex={-1}>
-      <ButtonGroup
-        className={classNames(block && "d-flex")}
-        vertical={vertical}
-      >
-        {options.map((option) => (
-          <Button
-            key={`${input.name}-${option[codeName]}`}
-            className={classNames(block && equalWidth && "w-100")}
-            color={metaError ? "danger" : "primary"}
-            disabled={disabled || readOnly}
-            onClick={buttonClickHandler(option)}
-            outline={
-              trueFalse
-                ? option[codeName] !== input.value
-                : option[codeName] !== input.value[codeName]
-            }
-            type="button"
-          >
-            {renderButtonName ? renderButtonName(option) : option[valueName]}
-          </Button>
-        ))}
-      </ButtonGroup>
+      {buttonsPerRow ? (
+        <Row className="mx-n1" xs={buttonsPerRow}>
+          {options.map((option) => (
+            <Col
+              key={`${input.name}-${option[codeName]}`}
+              className="px-1 mb-2"
+            >
+              <Item
+                block
+                color={metaError ? "danger" : "primary"}
+                disabled={disabled || readOnly}
+                onClick={buttonClickHandler(option)}
+                outline={
+                  trueFalse
+                    ? option[codeName] !== input.value
+                    : option[codeName] !== input.value[codeName]
+                }
+                type="button"
+              >
+                {renderButtonName
+                  ? renderButtonName(option)
+                  : option[valueName]}
+              </Item>
+            </Col>
+          ))}
+        </Row>
+      ) : (
+        <ButtonGroup
+          className={classNames(block && "d-flex")}
+          vertical={vertical}
+        >
+          {options.map((option) => (
+            <Item
+              key={`${input.name}-${option[codeName]}`}
+              className={classNames(block && equalWidth && "w-100")}
+              color={metaError ? "danger" : "primary"}
+              disabled={disabled || readOnly}
+              onClick={buttonClickHandler(option)}
+              outline={
+                trueFalse
+                  ? option[codeName] !== input.value
+                  : option[codeName] !== input.value[codeName]
+              }
+              type="button"
+            >
+              {renderButtonName ? renderButtonName(option) : option[valueName]}
+            </Item>
+          ))}
+        </ButtonGroup>
+      )}
     </ErrorTooltip>
   );
 };
