@@ -36,9 +36,9 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
   const blurHandler: React.FocusEventHandler<HTMLInputElement> = (event) => {
     let { value } = event.target;
     const isValid = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/.test(value);
-    const digits = value.replace(/\D/g, "");
 
     if (!isValid) {
+      const digits = value.replace(/\D/g, "");
       value =
         digits.length === 11
           ? digits.replace(
@@ -50,11 +50,34 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
     input.onBlur(value);
   };
 
+  const changeHandler: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (meta.active) {
+      input.onChange(event);
+      return;
+    }
+
+    let { value } = event.target;
+    const isValid = /\+7\(\d{3}\)\d{3}-\d{2}-\d{2}/.test(value);
+
+    if (!isValid) {
+      const digits = value.replace(/\D/g, "");
+      value =
+        digits.length === 11
+          ? digits.replace(
+              /(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/,
+              "+$1($2)$3-$4-$5"
+            )
+          : "";
+    }
+    input.onChange(value);
+  };
+
   const metaError = getMetaError(meta);
 
   return (
     <ErrorTooltip data-name={input.name} error={metaError}>
       <InputGroup>
+        <input name="phone" hidden />
         <MaskedInput
           {...input}
           {...rest}
@@ -77,6 +100,7 @@ const PhoneField: React.FC<PhoneFieldProps> = ({
             /\d/,
             /\d/,
           ]}
+          onChange={changeHandler}
           placeholderChar={placeholderChar}
           render={(ref, props) => (
             <Input
