@@ -33,7 +33,6 @@ export type SelectFieldCreatableProps<
     optionValue?: string;
     placeholder?: React.InputHTMLAttributes<HTMLInputElement>["placeholder"];
     processValuesBeforeSelect?: (values: any) => any;
-    createOption: (inputValue: string) => OptionType;
     readOnly?: React.InputHTMLAttributes<HTMLInputElement>["readOnly"];
   };
 
@@ -60,7 +59,6 @@ const SelectFieldCreatable = <
   placeholder,
   processValuesBeforeSelect = (values) => values,
   readOnly,
-  createOption,
   ...rest
 }: SelectFieldCreatableProps<OptionType, IsMulti>): React.ReactElement => {
   const [menuOpenState, setMenuOpenState] = React.useState(false);
@@ -89,29 +87,6 @@ const SelectFieldCreatable = <
   const menuOpenHandler = () => {
     setMenuOpenState(true);
     setStaticErrorState("");
-  };
-
-  const handleCreate = (inputValue: string) => {
-    const newOption = createOption(inputValue);
-    let updated: Array<OptionType> | OptionType;
-    if (isMulti) {
-      updated = [...(input.value as Array<OptionType>)];
-      updated.push(newOption);
-    } else {
-      updated = newOption;
-    }
-
-    const valueProcessed = processValuesBeforeSelect(updated);
-
-    if (maxItems && isMulti && valueProcessed) {
-      if (valueProcessed.length > maxItems) {
-        setStaticErrorState(maxItemsError(maxItems));
-        valueProcessed.splice(-1, 1);
-      } else {
-        setStaticErrorState("");
-      }
-    }
-    input.onChange(valueProcessed);
   };
 
   const metaError = getMetaError(meta);
@@ -149,7 +124,6 @@ const SelectFieldCreatable = <
         onMenuClose={menuCloseHandler}
         onMenuOpen={menuOpenHandler}
         options={options}
-        onCreateOption={handleCreate}
         placeholder={placeholder}
         readOnly={readOnly}
       />
