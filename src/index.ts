@@ -25,6 +25,9 @@ export { RangeFieldProps } from "./RangeField";
 export { default as SelectField } from "./SelectField";
 export { SelectFieldProps } from "./SelectField";
 
+export { default as SelectFieldCreatable } from "./SelectFieldCreatable";
+export { SelectFieldCreatableProps } from "./SelectFieldCreatable";
+
 export { default as TextField } from "./TextField";
 export { TextFieldProps } from "./TextField";
 
